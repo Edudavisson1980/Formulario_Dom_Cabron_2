@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliador de Usuários</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Avaliador de Usuários</h1>
+        <form id="reviewForm">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" maxlength="100" placeholder="Digite seu nome" required>
+            
+            <label for="city">Cidade:</label>
+            <input type="text" id="city" maxlength="30" placeholder="Digite sua cidade" required>
+            
+            <label for="comments">Comentários:</label>
+            <textarea id="comments" rows="5" placeholder="Escreva seu comentário" required></textarea>
+            
+            <button type="submit">Enviar Comentário</button>
+        </form>
+        <div id="commentsSection">
+            <h2>Comentários:</h2>
+            <ul id="commentsList"></ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
