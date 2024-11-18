@@ -1,8 +1,6 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// Importação do Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -16,12 +14,11 @@ const firebaseConfig = {
   appId: "1:583969099203:web:17b8ce2f39ba3fa0c0c176",
   measurementId: "G-679JQ53TCJ"
 };
-
-// Initialize Firebase
+// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getDatabase(app);
 
-
+// Enviar comentário
 document.getElementById("reviewForm").addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -31,24 +28,31 @@ document.getElementById("reviewForm").addEventListener("submit", (e) => {
     const date = new Date().toLocaleString();
 
     if (name && city && comments) {
+        // Enviar para o Realtime Database
         push(ref(db, "comments/"), {
             name,
             city,
             comments,
             date
+        }).then(() => {
+            // Mensagem de sucesso e reset do formulário
+            alert("Comentário enviado com sucesso!");
+            document.getElementById("reviewForm").reset();
+        }).catch((error) => {
+            console.error("Erro ao enviar comentário:", error);
+            alert("Erro ao enviar o comentário. Tente novamente.");
         });
-
-        document.getElementById("reviewForm").reset();
-        alert("Comentário enviado com sucesso!");
     } else {
         alert("Por favor, preencha todos os campos!");
     }
 });
 
+// Exibir comentários
 const commentsList = document.getElementById("commentsList");
 
+// Monitorar alterações no banco de dados
 onValue(ref(db, "comments/"), (snapshot) => {
-    commentsList.innerHTML = "";
+    commentsList.innerHTML = ""; // Limpa a lista antes de renderizar novamente
     snapshot.forEach((childSnapshot) => {
         const comment = childSnapshot.val();
         const li = document.createElement("li");
@@ -58,4 +62,6 @@ onValue(ref(db, "comments/"), (snapshot) => {
         `;
         commentsList.appendChild(li);
     });
+}, (error) => {
+    console.error("Erro ao buscar comentários:", error);
 });
