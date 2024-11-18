@@ -1,6 +1,6 @@
 // Importação do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-database.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -14,9 +14,11 @@ const firebaseConfig = {
   appId: "1:583969099203:web:17b8ce2f39ba3fa0c0c176",
   measurementId: "G-679JQ53TCJ"
 };
-// Inicializa o Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
 // Enviar comentário
 document.getElementById("reviewForm").addEventListener("submit", async (e) => {
@@ -30,7 +32,7 @@ document.getElementById("reviewForm").addEventListener("submit", async (e) => {
     if (name && city && comments) {
         try {
             // Envia os dados ao Firebase
-            await push(ref(db, "comments/"), {
+            await db.ref("comments/").push({
                 name,
                 city,
                 comments,
@@ -52,7 +54,7 @@ document.getElementById("reviewForm").addEventListener("submit", async (e) => {
 const commentsList = document.getElementById("commentsList");
 
 // Monitorar alterações no banco de dados
-onValue(ref(db, "comments/"), (snapshot) => {
+db.ref("comments/").on("value", (snapshot) => {
     commentsList.innerHTML = ""; // Limpa a lista antes de renderizar
     snapshot.forEach((childSnapshot) => {
         const comment = childSnapshot.val();
@@ -63,6 +65,4 @@ onValue(ref(db, "comments/"), (snapshot) => {
         `;
         commentsList.appendChild(li);
     });
-}, (error) => {
-    console.error("Erro ao carregar comentários:", error);
 });
