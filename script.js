@@ -12,9 +12,8 @@ const firebaseConfig = {
   storageBucket: "formulario-dom-cabron.firebasestorage.app",
   messagingSenderId: "583969099203",
   appId: "1:583969099203:web:17b8ce2f39ba3fa0c0c176",
-  measurementId: "G-679JQ53TCJ"
+  
 };
-
 
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
