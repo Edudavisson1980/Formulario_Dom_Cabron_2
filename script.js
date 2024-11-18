@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // Enviar comentário
-document.getElementById("reviewForm").addEventListener("submit", (e) => {
+document.getElementById("reviewForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
@@ -28,20 +28,21 @@ document.getElementById("reviewForm").addEventListener("submit", (e) => {
     const date = new Date().toLocaleString();
 
     if (name && city && comments) {
-        // Enviar para o Realtime Database
-        push(ref(db, "comments/"), {
-            name,
-            city,
-            comments,
-            date
-        }).then(() => {
-            // Mensagem de sucesso e reset do formulário
+        try {
+            // Envia os dados ao Firebase
+            await push(ref(db, "comments/"), {
+                name,
+                city,
+                comments,
+                date
+            });
+
             alert("Comentário enviado com sucesso!");
             document.getElementById("reviewForm").reset();
-        }).catch((error) => {
+        } catch (error) {
             console.error("Erro ao enviar comentário:", error);
-            alert("Erro ao enviar o comentário. Tente novamente.");
-        });
+            alert("Não foi possível enviar o comentário. Tente novamente.");
+        }
     } else {
         alert("Por favor, preencha todos os campos!");
     }
@@ -52,7 +53,7 @@ const commentsList = document.getElementById("commentsList");
 
 // Monitorar alterações no banco de dados
 onValue(ref(db, "comments/"), (snapshot) => {
-    commentsList.innerHTML = ""; // Limpa a lista antes de renderizar novamente
+    commentsList.innerHTML = ""; // Limpa a lista antes de renderizar
     snapshot.forEach((childSnapshot) => {
         const comment = childSnapshot.val();
         const li = document.createElement("li");
@@ -63,5 +64,5 @@ onValue(ref(db, "comments/"), (snapshot) => {
         commentsList.appendChild(li);
     });
 }, (error) => {
-    console.error("Erro ao buscar comentários:", error);
+    console.error("Erro ao carregar comentários:", error);
 });
