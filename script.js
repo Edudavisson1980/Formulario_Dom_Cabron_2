@@ -1,6 +1,3 @@
-// Importação do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-database.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -14,6 +11,7 @@ const firebaseConfig = {
   appId: "1:583969099203:web:17b8ce2f39ba3fa0c0c176",
   
 };
+
 // Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
